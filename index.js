@@ -1,5 +1,4 @@
 import * as tf from '@tensorflow/tfjs'
-import {IMAAGE_H, IMAGE_W, MnistData} from './data' 
 import * as ui from './ui'
 
 function createConvModel() {
