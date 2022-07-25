@@ -1,4 +1,4 @@
-import * as tf from "@tensorflow/tfjs"
+import * as tf from '@tensorflow/tfjs';
 
 export const IMAGE_H = 28
 export const IMAGE_W = 28
@@ -52,4 +52,3 @@ export class MnistData {
     return {xs, labels}
   }
 }
-
