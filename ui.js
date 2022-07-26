@@ -7,5 +7,7 @@ export function showTestResults(batch, predicitons, labels) {
 export function setTrainButtonCallBack(callback) {
   const trainButton = document.getElementById("train")
   console.log(trainButton)
-  trainButton.addEventListener('click', () => console.log("something"))
+  trainButton.addEventListener('click', () => {
+    callback()
+  })
 }
