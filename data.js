@@ -5,21 +5,24 @@ export const IMAGE_W = 28
 const IMAGE_SIZE = IMAGE_H*IMAGE_W
 const NUM_CLASSES = 10
 const MNIST_LABELS_PATH = 'https://storage.googleapis.com/learnjs-data/model-builder/mnist_labels_uint8'
-
+const MNIST_IMAGES_PATH = 'https://storage.googleapis.com/learnjs-data/model-builder/mnist_images.png'
 export class MnistData {
   constructor() {}
 
   async load() {
     const img = new Image()
-    const canvas = document.getElementById('canvas')
-    const ctx = canvas.getContext('2d')
     const imgRequest = new Promise((resolve, reject) => {
       // TODO: load img
+      img.onload = () => {
+        resolve()
+      }
+      img.src = MNIST_IMAGES_PATH 
     })
     const labelRequest = fetch(MNIST_LABELS_PATH)
     const [imgResponse, labelsResponse] = await Promise.all([imgRequest, labelRequest])
+    console.log("image", img) // html image element 
+    console.log("imgResponse", imgResponse) // undefined
     this.datasetLabels = new Uint8Array(await labelsResponse.arrayBuffer())
-    
     //TODO : split data for testing and training
   }
 
