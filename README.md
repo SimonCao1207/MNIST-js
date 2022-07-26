@@ -1,3 +1,3 @@
 # MNIST-js
 
-Training MNIST dataset on browser with tensorflowjs
+Training conv model for MNIST dataset on browser with tensorflowjs.
