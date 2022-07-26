@@ -65,4 +65,6 @@ function createModel() {
 }
 
 //TODO: main function, load data, train model, show what model predict on unseen data.
-ui.setTrainButtonCallBack(() => {})
+ui.setTrainButtonCallBack(async () => {
+  await load() // await to load the model
+})
