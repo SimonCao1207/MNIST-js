@@ -5,6 +5,8 @@ export const IMAGE_H = 28
 export const IMAGE_W = 28
 const IMAGE_SIZE = IMAGE_H*IMAGE_W
 const NUM_DATASET_ELEMENTS = 65000
+const NUM_TRAIN_ELEMENTS = 55000
+const NUM_TEST_ELEMENTS = NUM_DATASET_ELEMENTS - NUM_TRAIN_ELEMENTS
 const NUM_CLASSES = 10
 const MNIST_LABELS_PATH = 'https://storage.googleapis.com/learnjs-data/model-builder/mnist_labels_uint8'
 const MNIST_IMAGES_PATH = 'https://storage.googleapis.com/learnjs-data/model-builder/mnist_images.png' // Image Sprite
@@ -29,12 +31,10 @@ export class MnistData {
         // render on screen
         for (let i=0; i < NUM_DATASET_ELEMENTS/chunkSize; i++){
           // new Float32Array(buffer, byteOffset, length)
-          const datasetBytesView = new Float32Array(datasetBytesBuffer, i*IMAGE_SIZE*chunkSize*4, IMAGE_SIZE*chunkSize)
           ctx.drawImage(img, 0, i*chunkSize, img.width, chunkSize, 0, 0, img.width, chunkSize)
-          const imageData = ctx.getImageData(0, 0, cnvs.width, cnvs.height) // 784*5000*4
         }
-
         console.log(`width ${img.naturalWidth}, height: ${img.naturalHeight}`);
+        this.dataSetImage = new Float32Array(datasetBytesBuffer)
         resolve()
       }
       img.src = MNIST_IMAGES_PATH 
@@ -45,7 +45,12 @@ export class MnistData {
     console.log("image", img) // html image element 
     console.log("imgResponse", imgResponse) // undefined
     this.datasetLabels = new Uint8Array(await labelsResponse.arrayBuffer())
+    
     //TODO : split data for testing and training
+    this.trainImages = this.dataSetImage.slice(0, IMAGE_SIZE*NUM_TRAIN_ELEMENTS)
+    this.trainLabels = this.datasetLabels.slice(0, NUM_CLASSES*NUM_TRAIN_ELEMENTS)
+    this.testImages = this.dataSetImage.slice(IMAGE_SIZE*NUM_TRAIN_ELEMENTS)
+    this.testLabels = this.datasetLabels.slice(NUM_CLASSES*NUM_TRAIN_ELEMENTS)
   }
 
   getTrainData() {
