@@ -1,7 +1,12 @@
 import * as tfvis from '@tensorflow/tfjs-vis'
 
 export function showTestResults(batch, predicitons, labels) { 
-  //TODO: 
+  //TODO: later work
+}
+
+export function showTrainImages(){
+  //TODO: render on page the sample train images
+
 }
 
 export function setTrainButtonCallBack(callback) {
