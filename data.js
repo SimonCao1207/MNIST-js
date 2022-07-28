@@ -15,7 +15,7 @@ export class MnistData {
 
   async load() {
     const img = new Image()
-    const cnvs = document.getElementById('canvas')
+    const cnvs = document.createElement('canvas')
     const ctx = cnvs.getContext("2d")
     console.log(cnvs);
     const imgRequest = new Promise((resolve, reject) => {
