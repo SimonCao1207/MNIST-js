@@ -1,23 +1,30 @@
 import * as tf from '@tensorflow/tfjs';
-import { MnistData } from './data'
+import { IMAGE_H, IMAGE_W, MnistData } from './data'
 import * as ui from './ui'
-
-
-let data
-
-async function load(){
-  const data = new MnistData()
-  await data.load()
-}
 
 function createConvModel() {
   //TODO: define model here
+  const model = tf.sequential()
+  model.add(tf.layers.conv2d({
+    inputShape: [IMAGE_H, IMAGE_W, 1],
+    kernelSize: 3, 
+    filters: 16,
+    activation: 'relu'
+  }))
+  model.add(tf.layers.maxPooling2d({poolSize: 2, strides: 2}))
+  model.add(tf.layers.conv2d({kernelSize: 3, filters: 32, activation: 'relu'}))
+  model.add(tf.layers.maxPooling2d({poolSize: 2, strides: 2}))
+  model.add(tf.layers.conv2d({kernelSize: 3, filters: 32, activation: 'relu'}));
+  model.add(tf.layers.flatten({}));
+  model.add(tf.layers.dense({units: 64, activation: 'relu'}));
+  model.add(tf.layers.dense({units: 10, activation: 'softmax'}));
+  return model
 }
 
 async function train(model, onIteration) {
   //TODO: define model compile
   model.compile({
-    optimize: 'rmsprop', 
+    optimizer: 'rmsprop', 
     loss: 'categoricalCrossentropy',
     metrics: ['accuracy']
   })
@@ -25,7 +32,9 @@ async function train(model, onIteration) {
   //TODO: model.fit
   const trainData = data.getTrainData()
   const testData = data.getTestData()
-
+  const batchSize = 320
+  const validationSplit = 0.15
+  const trainEpochs = 3 // TODO: get from user (getTrainEpoch() in ui)
   await model.fit(trainData.xs, trainData.labels, {
     batchSize, 
     validationSplit,
@@ -33,16 +42,17 @@ async function train(model, onIteration) {
     callbacks : {
       onBatchEnd: async (batch, logs) => {
         //TODO: print status message and plot graph (loss, accucuracy) ? when batch end
-        
+        if (onIteration && batch%10 === 0)
+          onIteration("onBatchEnd", batch, logs)
         await tf.nextFrame()
       },
       
       onEpochEnd: async (epoch, logs) => {
         //TODO: plot graphs
-
+        if (onIteration)
+          onIteration("onEpochEnd", epoch, logs)
         await tf.nextFrame()
       }
-
     }
   })
 }
@@ -60,11 +70,20 @@ async function showPredictions(model) {
 }
 
 function createModel() {
-  const model = createConvModel()
+  let model = createConvModel()
   return model
+}
+
+let data
+async function load(){
+  data = new MnistData()
+  await data.load()
 }
 
 //TODO: main function, load data, train model, show what model predict on unseen data.
 ui.setTrainButtonCallBack(async () => {
   await load() // await to load the data
+  const model = createModel()
+  model.summary()
+  await train(model, () => showPredictions(model))
 })
