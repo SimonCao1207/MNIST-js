@@ -1,16 +1,16 @@
 import * as tfvis from '@tensorflow/tfjs-vis'
 
-const imageElements = document.getDocumentById("images")
+const imageElements = document.getElementById("images")
 
 export function showTestResults(batch, predicitons, labels) { 
-  //TODO: later work
+  //TODO: given batch, predictions and labels => render result on page
+
 }
 
 export function showTrainImages(trainBatch){
   //TODO: render on page the sample train images
   const trainExamples = trainBatch.xs.shape[0]
   imageElements.innerHTML = ''
-
 }
 
 export function setTrainButtonCallBack(callback) {
@@ -18,6 +18,5 @@ export function setTrainButtonCallBack(callback) {
   console.log(trainButton)
   trainButton.addEventListener('click', () => {
     callback()
-    showTrainImages()
   })
 }
