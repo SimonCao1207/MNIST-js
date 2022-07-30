@@ -34,7 +34,7 @@ export class MnistData {
           ctx.drawImage(img, 0, i*chunkSize, img.width, chunkSize, 0, 0, img.width, chunkSize)
           const imageData = ctx.getImageData(0, 0, cnvs.width, cnvs.height)
           for (let j=0; j < imageData.data.length/4; j++){
-            datasetBytesView[j] = imageDataa.data[j*4]/255
+            datasetBytesView[j] = imageData.data[j*4]/255
           }
 
         }
