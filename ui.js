@@ -4,14 +4,12 @@ import * as tfvis from '@tensorflow/tfjs-vis'
 const imageElements = document.getElementById("images")
 
 export function showTestResults(batch, predictions, labels) { 
-  //TODO: given batch, predictions and labels => render result on page
   // batch shape : [10,28,28,1]
   
   const testExamples = batch.xs.shape[0]
   imageElements.innerHTML = ''
   for (let i=0; i < testExamples; i++){
     const image = batch.xs.slice([i, 0], [1, batch.xs.shape[1]]) // why ? shape : 1*28*28*1
-    
     const div = document.createElement('div')
     div.className = 'pred-container'
     const canvas = document.createElement('canvas')
