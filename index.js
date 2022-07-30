@@ -3,7 +3,6 @@ import { IMAGE_H, IMAGE_W, MnistData } from './data'
 import * as ui from './ui'
 
 function createConvModel() {
-  //TODO: define model here
   const model = tf.sequential()
   model.add(tf.layers.conv2d({
     inputShape: [IMAGE_H, IMAGE_W, 1],
@@ -22,14 +21,12 @@ function createConvModel() {
 }
 
 async function train(model, onIteration) {
-  //TODO: define model compile
   model.compile({
     optimizer: 'rmsprop', 
     loss: 'categoricalCrossentropy',
     metrics: ['accuracy']
   })
 
-  //TODO: model.fit
   const trainData = data.getTrainData()
   const testData = data.getTestData()
   const batchSize = 320
@@ -68,7 +65,6 @@ async function showPredictions(model) {
     ui.showTestResults(examples, predictions, labels)
   })
 }
-
 function createModel() {
   let model = createConvModel()
   return model
@@ -80,9 +76,20 @@ async function load(){
   await data.load()
 }
 
-//TODO: main function, load data, train model, show what model predict on unseen data.
+async function renderImages() {
+  const trainBatch = data.getTrainData()
+  ui.renderTrainImages(trainBatch)
+}
+
+ui.displayTrainImages(async () => {
+  // TODO: display random train images
+  await load()
+  await renderImages()
+})
+
+//Main function, load data, train model, show what model predict on unseen data.
 ui.setTrainButtonCallBack(async () => {
-  await load() // await to load the data
+  await load()
   const model = createModel()
   model.summary()
   await train(model, () => showPredictions(model))
