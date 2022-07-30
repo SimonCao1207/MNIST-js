@@ -58,7 +58,7 @@ async function train(model, onIteration) {
 }
 
 async function showPredictions(model) {
-  const testExamples = 10
+  const testExamples = 100
   const examples = data.getTestData(testExamples)
 
   tf.tidy(() => {
