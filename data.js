@@ -17,23 +17,27 @@ export class MnistData {
     const img = new Image()
     const cnvs = document.createElement('canvas')
     const ctx = cnvs.getContext("2d")
-    console.log(cnvs);
     const imgRequest = new Promise((resolve, reject) => {
       // TODO: load img 
       img.crossOrigin = ''
       img.onload = () => {
         img.width = img.naturalWidth //784 = (28*28)
         img.height = img.naturalHeight //65000 = num_samples
-        const datasetBytesBuffer = new ArrayBuffer(NUM_DATASET_ELEMENTS*IMAGE_SIZE*4) // create a new buffer len 65000*28*28*(num_bytes=4)
+        const datasetBytesBuffer = new ArrayBuffer(NUM_DATASET_ELEMENTS*IMAGE_SIZE*4) // 65000*28*28*(num_bytes=4)
         const chunkSize = 5000 
         cnvs.width = img.width
         cnvs.height = chunkSize
         // render on screen
         for (let i=0; i < NUM_DATASET_ELEMENTS/chunkSize; i++){
           // new Float32Array(buffer, byteOffset, length)
+          const datasetBytesView = new Float32Array(datasetBytesBuffer, i*IMAGE_SIZE*chunkSize*4, IMAGE_SIZE*chunkSize)
           ctx.drawImage(img, 0, i*chunkSize, img.width, chunkSize, 0, 0, img.width, chunkSize)
+          const imageData = ctx.getImageData(0, 0, cnvs.width, cnvs.height)
+          for (let j=0; j < imageData.data.length/4; j++){
+            datasetBytesView[j] = imageDataa.data[j*4]/255
+          }
+
         }
-        console.log(`width ${img.naturalWidth}, height: ${img.naturalHeight}`);
         this.dataSetImage = new Float32Array(datasetBytesBuffer)
         resolve()
       }
